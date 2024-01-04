@@ -12,4 +12,7 @@ import org.springframework.graphql.data.GraphQlRepository
 @GraphQlRepository
 interface CommentRepository : JpaRepository<Comment, Long> {
     fun findByPostIdIn(postIds: List<Long>): List<Comment>
+
+
+    fun findByPostIdIn(postIds: List<Long>, position: ScrollPosition, limit: Limit, sort: Sort): Window<Comment>
 }

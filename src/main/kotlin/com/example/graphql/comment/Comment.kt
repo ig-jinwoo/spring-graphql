@@ -10,14 +10,19 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 
 @Entity
-data class Comment(
+class Comment(
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
+    var author: String,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
-    var post: Post,
+    var post: Post? = null,
 
     var text: String
-)
+) {
+
+}

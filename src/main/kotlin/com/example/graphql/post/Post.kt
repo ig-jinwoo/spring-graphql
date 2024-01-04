@@ -10,14 +10,14 @@ import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 
 @Entity
-data class Post(
+open class Post(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
     var title: String,
 
-    var content: String,
+    var content: String?,
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var comments: List<Comment> = listOf()

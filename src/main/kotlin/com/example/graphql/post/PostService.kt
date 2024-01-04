@@ -4,6 +4,8 @@ import org.springframework.data.domain.Limit
 import org.springframework.data.domain.ScrollPosition
 import org.springframework.data.domain.Sort
 import org.springframework.data.domain.Window
+import org.springframework.security.access.annotation.Secured
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,14 +19,15 @@ class PostService(private val postRepository: PostRepository) {
         return postRepository.findById(id).orElseThrow { NoSuchElementException("Post not found with id: $id") }
     }
 
-    fun createPost(title: String, content: String): Post {
+    @Secured("ROLE_ADMIN")
+    fun createPost(title: String, content: String?): Post {
         val post = Post(title = title, content = content)
         return postRepository.save(post)
     }
 
     fun updatePost(id: Long, title: String, content: String): Post {
         val post = findPostById(id)
-        val updatedPost = post.copy(title = title, content = content)
+        val updatedPost = Post(id = post.id, title = title, content = content)
         return postRepository.save(updatedPost)
     }
 

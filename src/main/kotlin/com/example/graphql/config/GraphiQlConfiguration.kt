@@ -1,4 +1,4 @@
-package com.example.graphql
+package com.example.graphql.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

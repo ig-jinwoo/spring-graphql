@@ -28,9 +28,10 @@ class DataLoader {
                 postRepository.save(post)
 
                 // 각 포스트에 대한 3개의 코멘트 생성 및 저장
-                (1..3).forEach { _ ->
+                (1..10).forEach { _ ->
                     val commentText = faker.lorem().sentence()
-                    val comment = Comment(text = commentText, post = post)
+                    val author = faker.name().toString()
+                    val comment = Comment(text = commentText, author=author, post = post)
                     commentRepository.save(comment)
                 }
             }

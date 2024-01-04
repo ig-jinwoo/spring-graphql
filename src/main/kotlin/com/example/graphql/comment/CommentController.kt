@@ -10,6 +10,7 @@ import org.springframework.graphql.data.method.annotation.BatchMapping
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.query.ScrollSubrange
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RestController
 import java.util.stream.Collectors
@@ -19,13 +20,22 @@ import java.util.stream.Collectors
 class CommentController(private val commentService: CommentService) {
 
     @MutationMapping
-    fun createComment(@Argument postId: Long?, @Argument text: String): Comment {
-        return commentService.createComment(postId!!, text)
+    fun createComment(@Argument postId: Long?, @Argument author: String, @Argument text: String): Comment {
+        return commentService.createComment(postId!!, author, text)
     }
 
     @QueryMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     fun commentById(@Argument id: Long?): Comment {
         return commentService.findCommentById(id!!)
+    }
+
+    @QueryMapping
+    fun commentsByPostId(@Argument postId: Long, subrange: ScrollSubrange): Window<Comment> {
+        val scrollPosition = subrange.position().orElse(ScrollPosition.offset())
+        val limit = Limit.of(subrange.count().orElse(10))
+        val sort = Sort.by("text").ascending()
+        return commentService.findCommentsByPostId(postId, scrollPosition, limit, sort)
     }
 
     @MutationMapping
